@@ -1,46 +1,38 @@
 function BuildStart() {
-  d3.json("samples.json").then(function (data) {
-
+  d3.json("data/samples.json").then(function (data) {
+    console.log(data);
     console.log(data)
-    var metadata = data.metadata;
+    // var metadata = data.metadata;
     var names = data.names;
-    var samples = data.samples;
-
-
-
-
+    console.log(names)
+    // var samples = data.samples;
     var select = d3.select("#selDataset");
-    names.foreach(id => {
-      var options = select.append("options");
-      options.text(id)
+    names.forEach(function (name) {
+      select.append("option").text(name).property("value", name);
     })
-
-
-  })
-};
+    BuildBarChart(data);
+    }
+  )};
 BuildStart();
 
-function optionChanged() {
-  var dropdownmenu = d3.select("#selDataset");
-  var variableID = dropdownmenu.property("value");
-  console.log(variableID);
-  BuildwithFilter(variableID);
-};
-
-
-function buildBarChart(data, variableID) {
-
-  // Extract the needed data from the data(JSON), and save it as a variables
+function BuildBarChart(data) {
   var samples = data.samples;
-  var dataId = samples.filter(sample => sample.id == variableID);
+  // var dataId = samples.filter(sample => sample.id == variableID);
 
-  var Ids10 = dataId[0].otu_ids.slice(0, 10);
-  var IdsAsString = Ids10.map(Id => "OTU " + Id);
+  // var Ids10 = dataId[0].otu_ids.slice(0, 10);
+  // var IdsAsString = Ids10.map(Id => "OTU " + Id);
 
-  var sample_value10 = dataId[0].sample_values.slice(0, 10).reverse();
+  // var sample_value10 = dataId[0].sample_values.slice(0, 10).reverse();
 
-  var sample_labels10 = dataId[0].otu_labels.slice(0, 10);
+  // var sample_labels10 = dataId[0].otu_labels.slice(0, 10);
 
+
+  var sample_value10 = data.samples[0].sample_values.slice(0, 10).reverse();
+  var sample_labels10 = data.samples[0].sample_values.slice(0, 10);
+  var otu_Top = (data.samples[0].otu_ids.slice(0,10)).reverse();
+  var IdsAsString = otu_Top.map(d => "OTU" +d);
+
+  // Create the trace, layout and the plot
   var trace1 = {
     x: sample_value10,
     y: IdsAsString,
@@ -68,5 +60,21 @@ function buildBarChart(data, variableID) {
   };
 
   Plotly.newPlot("bar", data, layout);
-
 };
+
+
+function optionChanged() {
+  var dropdownmenu = d3.select("#selDataset");
+  var variableID = dropdownmenu.property("value");
+  console.log(variableID);
+  Buildingfunction(variableID)
+};
+
+function Buildingfunction(variableID) {
+  d3.json("data/samples.json").then(function (data) {
+    BuildBarChart(data);
+  }
+
+  )
+};
+
