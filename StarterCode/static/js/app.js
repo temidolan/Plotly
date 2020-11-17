@@ -2,7 +2,6 @@ function BuildStart() {
   d3.json("data/samples.json").then(function (data) {
     console.log(data);
     console.log(data)
-    // var metadata = data.metadata;
     var names = data.names;
     console.log(names)
     // var samples = data.samples;
@@ -10,29 +9,38 @@ function BuildStart() {
     names.forEach(function (name) {
       select.append("option").text(name).property("value", name);
     })
-    BuildBarChart(data);
-    }
-  )};
+    BuildBarChart(data, variableID);
+    BuildBubbleChart(data, variableID);
+    BuildDemographicInfo(data, variableID)
+  }
+  )
+};
 BuildStart();
 
-function BuildBarChart(data) {
+function BuildDemographicInfo(data, variableID){
+  var metademo= data.metadata.filter(demo=>demo.id== variableID)[0];
+  var demograph= d3.select("#sample-metadata");
+  demograph.html("");
+  Object.entries(metademo).forEach(([key,value])=>{
+    var info=demograph.append("p");
+    info.text( `${key}: ${value}`);
+  }); 
+
+};
+
+
+
+function BuildBarChart(data,variableID) {
   var samples = data.samples;
-  // var dataId = samples.filter(sample => sample.id == variableID);
+  var dataId = samples.filter(sample => sample.id == variableID);
 
-  // var Ids10 = dataId[0].otu_ids.slice(0, 10);
-  // var IdsAsString = Ids10.map(Id => "OTU " + Id);
+  var Ids10 = dataId[0].otu_ids.slice(0, 10);
+  var IdsAsString = Ids10.map(Id => "OTU " + Id);
 
-  // var sample_value10 = dataId[0].sample_values.slice(0, 10).reverse();
+  var sample_value10 = dataId[0].sample_values.slice(0, 10).reverse();
 
-  // var sample_labels10 = dataId[0].otu_labels.slice(0, 10);
+  var sample_labels10 = dataId[0].otu_labels.slice(0, 10);
 
-
-  var sample_value10 = data.samples[0].sample_values.slice(0, 10).reverse();
-  var sample_labels10 = data.samples[0].sample_values.slice(0, 10);
-  var otu_Top = (data.samples[0].otu_ids.slice(0,10)).reverse();
-  var IdsAsString = otu_Top.map(d => "OTU" +d);
-
-  // Create the trace, layout and the plot
   var trace1 = {
     x: sample_value10,
     y: IdsAsString,
@@ -63,6 +71,44 @@ function BuildBarChart(data) {
 };
 
 
+
+
+function BuildBubbleChart(data,variableID) {
+  var samples = data.samples;
+  var dataId = samples.filter(sample => sample.id == variableID);
+
+  var otu_id = dataId[0].otu_ids;
+
+  var sample_value = dataId[0].sample_values;
+
+  var sample_labels10 = dataId[0].otu_labels;
+
+  // Create the trace, layout and the plot
+  var trace1 = {
+    x: otu_id,
+    y: sample_value,
+    mode: 'markers',
+    marker: {
+      color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
+      opacity: [1, 0.8, 0.6, 0.4],
+      size: [40, 60, 80, 100]
+    }
+  };
+
+  var data = [trace1];
+
+  var layout = {
+    title: 'Top 10 OTUs found',
+    showlegend: false,
+    height: 600,
+    width: 600
+  };
+  Plotly.newPlot('bubblechart', data, layout);
+
+};
+
+
+
 function optionChanged() {
   var dropdownmenu = d3.select("#selDataset");
   var variableID = dropdownmenu.property("value");
@@ -72,9 +118,14 @@ function optionChanged() {
 
 function Buildingfunction(variableID) {
   d3.json("data/samples.json").then(function (data) {
-    BuildBarChart(data);
+    BuildBarChart(data, variableID);
+    BuildBubbleChart(data, variableID);
+    BuildDemographicInfo(data, variableID);
   }
 
   )
 };
+
+
+
 
