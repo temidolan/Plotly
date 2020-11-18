@@ -27,7 +27,7 @@ body {
 
 }
 #selDataset{
-    background-color: black;
+    background-color:white;
 }
 
 /* Title Class  */
@@ -69,4 +69,10 @@ padding-top: 15px;
 
 .col-md-2{
     color: yellowgreen;
+  }
+
+  .panel-primary > .panel-heading {
+    color: #fff;
+    background-color:yellowgreen;
+    border-color:yellowgreen;
   }
