@@ -12,11 +12,10 @@ body {
   .jumbotron{
     background-color: yellowgreen;
   }
-  
 /* panel */
 .panel{
     width: auto;
-    background-color: white;
+    background-color: whitesmoke;
 }
 
 .col-md-2{
@@ -30,14 +29,6 @@ body {
 #selDataset{
     background-color: yellowgreen;
 }
-
-
-/* Images */
-img{
-    width:100% !important;
-    height:100% !important;
-}
-
 
 /* Title Class  */
 .title{
@@ -75,3 +66,7 @@ padding-top: 15px;
 .panel-heading{
     color: yellowgreen;
 }
+
+.col-md-2{
+    color: yellowgreen;
+  }
